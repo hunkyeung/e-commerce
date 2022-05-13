@@ -1,0 +1,20 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://10.10.1.167:27016/${spring.data.mongodb.database}
+      database: sample
+  application:
+    name: ${APPLICATION_NAME:sample}
+logging:
+  level:
+    com.robustel: debug
+server:
+  port: 8080
+robustel:
+  user-id: USER_ID
+  support-transaction: false
+  uid:
+    snow-flake:
+      machineId: 2
+      dataCenterId: 1
+debug: true
