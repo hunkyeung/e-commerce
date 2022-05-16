@@ -11,11 +11,12 @@
     <modules>
         <module>domain-context-transaction</module>
         <module>domain-context-member</module>
-        <module>adapter-acl-transaction</module>
+        <module>adapter-acl-member-transaction</module>
         <module>adapter-resource</module>
         <module>adapter-persistence-mongo-transaction</module>
         <module>adapter-persistence-mongo-member</module>
         <module>e-commerce-bootstrap</module>
+        <module>adapter-acl-ipc-member-transaction</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
