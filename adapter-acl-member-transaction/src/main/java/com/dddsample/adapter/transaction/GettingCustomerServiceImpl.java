@@ -14,7 +14,7 @@ import java.util.Objects;
 @Component
 public class GettingCustomerServiceImpl implements GettingCustomerService {
     @Value("${robustel.user-id}")
-    private String user_id;
+    private String userId;
     private final GettingMemberApplication gettingMemberApplication;
 
     public GettingCustomerServiceImpl(GettingMemberApplication gettingMemberApplication) {
@@ -23,7 +23,7 @@ public class GettingCustomerServiceImpl implements GettingCustomerService {
 
     @Override
     public Customer getCurrentCustomer() {
-        Member.Data data = gettingMemberApplication.getMember(MemberId.of(ThreadLocalUtil.get(user_id)));
+        Member.Data data = gettingMemberApplication.getMember(MemberId.of(ThreadLocalUtil.get(userId)));
         if (Objects.isNull(data)) {
             throw new IllegalStateException("Not found customer. ");
         }
