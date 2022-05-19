@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class GettingCustomerServiceImpl implements GettingCustomerService {
+public class LocalGettingCustomerService implements GettingCustomerService {
     @Value("${robustel.user-id}")
     private String userId;
     private final GettingMemberApplication gettingMemberApplication;
 
-    public GettingCustomerServiceImpl(GettingMemberApplication gettingMemberApplication) {
+    public LocalGettingCustomerService(GettingMemberApplication gettingMemberApplication) {
         this.gettingMemberApplication = gettingMemberApplication;
     }
 

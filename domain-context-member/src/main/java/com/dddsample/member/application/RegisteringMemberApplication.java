@@ -3,6 +3,7 @@ package com.dddsample.member.application;
 import com.dddsample.member.domain.member.Member;
 import com.dddsample.member.domain.member.MemberId;
 import com.dddsample.member.domain.member.MemberRepository;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -25,6 +26,7 @@ public class RegisteringMemberApplication {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Command {
         private String name;
         private String description;

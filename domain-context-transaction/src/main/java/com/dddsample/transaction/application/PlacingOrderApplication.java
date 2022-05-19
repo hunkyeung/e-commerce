@@ -1,15 +1,15 @@
 package com.dddsample.transaction.application;
 
-import com.dddsample.transaction.domain.order.Order;
-import com.dddsample.transaction.domain.order.OrderId;
-import com.dddsample.transaction.domain.order.OrderRepository;
-import com.robustel.ddd.service.EventPublisher;
-import com.robustel.ddd.service.ServiceLocator;
 import com.dddsample.transaction.application.service.GettingCommodityService;
 import com.dddsample.transaction.application.service.GettingCustomerService;
 import com.dddsample.transaction.domain.Commodity;
 import com.dddsample.transaction.domain.Customer;
+import com.dddsample.transaction.domain.order.Order;
 import com.dddsample.transaction.domain.order.OrderCreatedEvent;
+import com.dddsample.transaction.domain.order.OrderId;
+import com.dddsample.transaction.domain.order.OrderRepository;
+import com.robustel.ddd.service.EventPublisher;
+import com.robustel.ddd.service.ServiceLocator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -23,20 +23,24 @@ import java.util.stream.Collectors;
 @Service
 public class PlacingOrderApplication {
     private final OrderRepository repository;
+    private final GettingCustomerService gettingCustomerService;
+    private final GettingCommodityService gettingCommodityService;
 
-    public PlacingOrderApplication(OrderRepository repository) {
+    public PlacingOrderApplication(OrderRepository repository, GettingCustomerService gettingCustomerService, GettingCommodityService gettingCommodityService) {
         this.repository = repository;
+        this.gettingCustomerService = gettingCustomerService;
+        this.gettingCommodityService = gettingCommodityService;
     }
 
     public OrderId doPlaceOrder(Command command) {
         //获取客户信息
-        Customer customer = ServiceLocator.service(GettingCustomerService.class).getCurrentCustomer();
+        Customer customer = gettingCustomerService.getCurrentCustomer();
 
         //根据购物车获取商品信息
         Map<String, Integer> cart = Optional.ofNullable(command.getCart())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid argument. "));
         List<Commodity> commodities =
-                ServiceLocator.service(GettingCommodityService.class).getCommodities(cart.keySet().stream().toList());
+                gettingCommodityService.getCommodities(cart.keySet().stream().toList());
         Map<Commodity, Integer> commodityAndQuantity =
                 commodities.stream().collect(Collectors.toMap(commodity -> commodity, commodity -> cart.get(commodity.getId())));
 

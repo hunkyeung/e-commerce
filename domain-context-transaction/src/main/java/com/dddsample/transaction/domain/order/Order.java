@@ -1,15 +1,15 @@
 package com.dddsample.transaction.domain.order;
 
+import com.dddsample.transaction.domain.Commodity;
+import com.dddsample.transaction.domain.Customer;
 import com.robustel.ddd.core.AbstractEntity;
 import com.robustel.ddd.core.ValueObject;
 import com.robustel.ddd.service.ServiceLocator;
 import com.robustel.ddd.service.UidGenerator;
-import com.dddsample.transaction.domain.Commodity;
-import com.dddsample.transaction.domain.Customer;
 import lombok.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -17,19 +17,23 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class Order extends AbstractEntity<OrderId> {
     private Customer customer;
-    private List<OrderItem> items;
+    private Set<OrderItem> items;
     private long totalPrice;
 
-    public Order(OrderId id, Customer customer, List<OrderItem> items, long totalPrice) {
+    public Order(OrderId id, Customer customer, Set<OrderItem> items, long totalPrice) {
         super(id);
         this.customer = customer;
         this.items = items;
         this.totalPrice = totalPrice;
     }
 
-    public static Order of(Customer customer, Map<Commodity, Integer> productAndQuantity) {
-        List<OrderItem> items = productAndQuantity.entrySet().stream().map(entry ->
-                OrderItem.of(entry.getKey(), entry.getValue())).toList();
+    public static Order of(Customer customer, Map<Commodity, Integer> commodityAndQuantity) {
+        if (Objects.isNull(customer)) {
+            throw new IllegalArgumentException("Customer could not be null. ");
+        }
+        Set<OrderItem> items = Optional.ofNullable(commodityAndQuantity).orElse(new HashMap<>(0))
+                .entrySet().stream().filter(entry -> entry.getValue() > 0).map(
+                        entry -> OrderItem.of(entry.getKey(), entry.getValue())).collect(Collectors.toSet());
         long totalPrice = items.stream().map(OrderItem::calcTotalPrice)
                 .reduce(Long::sum).orElse(0L);
         return new Order(OrderId.of(ServiceLocator.service(UidGenerator.class).nextId()),
@@ -43,15 +47,17 @@ public class Order extends AbstractEntity<OrderId> {
     @AllArgsConstructor
     @Getter
     @ToString
+    @EqualsAndHashCode
     public static class Data {
         private long id;
         private Customer customer;
-        private List<OrderItem> items;
+        private Set<OrderItem> items;
         private long totalPrice;
     }
 }
 
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 @ToString(callSuper = true)
 class OrderItem implements ValueObject {
@@ -59,7 +65,7 @@ class OrderItem implements ValueObject {
     private int quantity;
 
     static OrderItem of(Commodity commodity, Integer quantity) {
-        if (commodity == null) {
+        if (Objects.isNull(commodity)) {
             throw new IllegalArgumentException("Commodity can not be null. ");
         }
         if (quantity <= 0) {

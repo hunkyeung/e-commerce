@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class GettingCommodityServiceImpl implements GettingCommodityService {
+public class LocalGettingCommodityService implements GettingCommodityService {
     private static final Map<String, Commodity> commodityMap;
 
     static {
