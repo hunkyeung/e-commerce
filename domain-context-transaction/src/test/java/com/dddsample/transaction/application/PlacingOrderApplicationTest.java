@@ -67,7 +67,7 @@ class PlacingOrderApplicationTest {
         ServiceLocator.service(EventPublisher.class).register(new ListenerEvent());
         Map<String, Integer> cart = new HashMap<>();
         cart.put("1", 10);
-        placingOrderApplication.doPlaceOrder(new PlacingOrderApplication.Command(cart));
+        placingOrderApplication.doPlaceOrder(new PlacingOrderApplication.Command("shippingAddress", cart));
         verify(gettingCustomerService).getCurrentCustomer();
         verify(gettingCommodityService).getCommodities(anyList());
         verify(repository).save(any(Order.class));

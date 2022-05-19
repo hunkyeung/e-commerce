@@ -10,6 +10,7 @@ import com.dddsample.transaction.domain.order.OrderId;
 import com.dddsample.transaction.domain.order.OrderRepository;
 import com.robustel.ddd.service.EventPublisher;
 import com.robustel.ddd.service.ServiceLocator;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -45,7 +46,7 @@ public class PlacingOrderApplication {
                 commodities.stream().collect(Collectors.toMap(commodity -> commodity, commodity -> cart.get(commodity.getId())));
 
         //保存订单
-        Order order = Order.of(customer, commodityAndQuantity);
+        Order order = Order.of(customer, command.getShippingAddress(), commodityAndQuantity);
         repository.save(order);
 
         //发布领域事件
@@ -55,12 +56,10 @@ public class PlacingOrderApplication {
 
     @Getter
     @NoArgsConstructor
+    @AllArgsConstructor
     @ToString
     public static class Command {
+        private String shippingAddress;
         private Map<String, Integer> cart;
-
-        public Command(Map<String, Integer> cart) {
-            this.cart = cart;
-        }
     }
 }

@@ -17,17 +17,20 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 public class Order extends AbstractEntity<OrderId> {
     private Customer customer;
+
+    private String shippingAddress;
     private Set<OrderItem> items;
     private long totalPrice;
 
-    public Order(OrderId id, Customer customer, Set<OrderItem> items, long totalPrice) {
+    public Order(OrderId id, Customer customer, String shippingAddress, Set<OrderItem> items, long totalPrice) {
         super(id);
         this.customer = customer;
+        this.shippingAddress = shippingAddress;
         this.items = items;
         this.totalPrice = totalPrice;
     }
 
-    public static Order of(Customer customer, Map<Commodity, Integer> commodityAndQuantity) {
+    public static Order of(Customer customer, String shippingAddress, Map<Commodity, Integer> commodityAndQuantity) {
         if (Objects.isNull(customer)) {
             throw new IllegalArgumentException("Customer could not be null. ");
         }
@@ -37,7 +40,7 @@ public class Order extends AbstractEntity<OrderId> {
         long totalPrice = items.stream().map(OrderItem::calcTotalPrice)
                 .reduce(Long::sum).orElse(0L);
         return new Order(OrderId.of(ServiceLocator.service(UidGenerator.class).nextId()),
-                customer, items, totalPrice);
+                customer, shippingAddress, items, totalPrice);
     }
 
     public Data toData() {

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ class OrderTest {
     @Test
     void Given_NullCustomer_When_Of_Then_ThrowIllegalArgumentException() {
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> Order.of(null, new HashMap<>()));
+                () -> Order.of(null, "shippingAddress", Map.of()));
     }
 
     @Test
@@ -32,9 +31,9 @@ class OrderTest {
         Customer zhangSan = Customer.of("1", "ZhangSan");
         Commodity apple = Commodity.of("1", "Apple", 8000);
         Commodity pear = Commodity.of("2", "Pear", 5000);
-        Order order = Order.of(zhangSan,
+        Order order = Order.of(zhangSan, "shippingAddress",
                 Map.of(apple, 10, pear, 5));
-        assertEquals(new Customer("1", "ZhangSan"), order.getCustomer());
+        assertEquals(Customer.of("1", "ZhangSan"), order.getCustomer());
         assertTrue(order.getItems().contains(OrderItem.of(Commodity.of("1", "Apple", 8000), 10)));
         assertTrue(order.getItems().contains(OrderItem.of(Commodity.of("2", "Pear", 5000), 5)));
         Order.Data data = new Order.Data(order.id().value(),
