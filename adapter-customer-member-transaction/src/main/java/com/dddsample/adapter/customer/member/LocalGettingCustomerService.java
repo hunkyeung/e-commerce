@@ -1,4 +1,4 @@
-package com.dddsample.adapter.transaction;
+package com.dddsample.adapter.customer.member;
 
 import com.dddsample.member.application.GettingMemberApplication;
 import com.dddsample.member.domain.member.Member;

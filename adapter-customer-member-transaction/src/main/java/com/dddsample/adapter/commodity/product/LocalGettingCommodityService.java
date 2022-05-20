@@ -1,4 +1,4 @@
-package com.dddsample.adapter.transaction;
+package com.dddsample.adapter.commodity.product;
 
 import com.robustel.ddd.core.DomainException;
 import com.dddsample.transaction.application.service.GettingCommodityService;
